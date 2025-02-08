@@ -1,31 +1,268 @@
-<html><head>
+<!DOCTYPE html>
+<html lang="en">
 
-<title>I Love You!</title>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cheer Up!</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: black;
+      margin: 0;
+      overflow: hidden;
+    }
 
-<meta charset="utf-8" />
+    .container {
+      text-align: center;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      z-index: 1;
+    }
 
+    h1 {
+      color: #ff69b4;
+    }
+
+    p {
+      font-size: 1.2em;
+      color: #555;
+    }
+
+    .emoji {
+      font-size: 3em;
+      margin: 20px 0;
+    }
+
+    button {
+      background-color: #ff69b4;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1em;
+    }
+
+    button:hover {
+      background-color: #ff1493;
+    }
+
+    .firework {
+      position: absolute;
+      width: 5px;
+      height: 5px;
+      background: #ff69b4;
+      border-radius: 50%;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    #flower {
+      position: absolute;
+      top: 50px;
+      left: 50px;
+      visibility: hidden;
+      width: 300px;
+      height: 400px;
+      text-align: center;
+      background-color: wheat;
+    }
+
+    #flower div {
+      color: green;
+      font-size: 20px;
+      position: relative;
+      z-index: 10000;
+      margin-top: 20px;
+    }
+
+    #c {
+      width: 300px;
+      height: 300px;
+    }
+
+    #canvas {
+      visibility: hidden;
+      position: absolute;
+    }
+  </style>
 </head>
 
 <body>
+  <canvas id="canvas"></canvas>
+  <div class="container">
+    <h1>Cheer Up!</h1>
+    <div class="emoji">😊🌈✨</div>
+    <p>大湾区融通小公主, 你好啊</p>
+    <button onclick="showMessage()">Click me for a surprise!</button>
+  </div>
+  <script>
+    function showMessage() {
+      const c = document.querySelector('#canvas')
+      const container = document.querySelector('.container')
+      c.style.visibility = 'visible'
+      container.style.display = 'none'
+      launchFireworks();
+    }
 
-<canvas id="c"></canvas>
+    function launchFireworks() {
+      for (let i = 0; i < 30; i++) {
+        createFirework();
+      }
+    }
 
-<script>
+    function createFirework() {
+      const firework = document.createElement('div');
+      firework.classList.add('firework');
+      document.body.appendChild(firework);
 
-var b = document.body;
+      const size = Math.random() * 5 + 5 + 'px';
+      firework.style.width = size;
+      firework.style.height = size;
+      firework.style.left = Math.random() * window.innerWidth + 'px';
+      firework.style.top = Math.random() * window.innerHeight + 'px';
 
-var c = document.getElementsByTagName('canvas')[0];
+      firework.style.transition = 'transform 1s ease-out, opacity 1s ease-out';
+      firework.style.transform = `translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px) scale(0)`;
+      firework.style.opacity = '1';
 
-var a = c.getContext('2d');
+      setTimeout(() => {
+        firework.style.transform = `translate(${Math.random() * 400 - 200}px, ${Math.random() * 400 - 200}px) scale(1)`;
+        firework.style.opacity = '0';
+      }, 0);
 
-document.body.clientWidth; 
+      setTimeout(() => {
+        firework.remove();
+      }, 1000);
+    }
+  </script>
+  <script>
+    window.addEventListener("resize", resizeCanvas, false);
+    window.addEventListener("DOMContentLoaded", onLoad, false);
+    window.requestAnimationFrame =
+      window.requestAnimationFrame ||
+      window.webkitRequestAnimationFrame ||
+      window.mozRequestAnimationFrame ||
+      window.oRequestAnimationFrame ||
+      window.msRequestAnimationFrame ||
+      function(callback) {
+        window.setTimeout(callback, 1000 / 60);
+      };
+    var canvas, ctx, w, h, particles = [],
+      probability = 0.04,
+      xPoint, yPoint;
+      
+    function onLoad() {
+      canvas = document.getElementById("canvas");
+      ctx = canvas.getContext("2d");
+      resizeCanvas();
 
-</script>
+      window.requestAnimationFrame(updateWorld);
+    }
 
-<script>
+    function resizeCanvas() {
+      if (!!canvas) {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+      }
+    }
 
-with(m=Math)C=cos,S=sin,P=pow,R=random;c.width=c.height=f=500;h=-250;function p(a,b,c){if(c>60)return[S(a*7)*(13+5/(.2+P(b*4,4)))-S(b)*50,b*f+50,625+C(a*7)*(13+5/(.2+P(b*4,4)))+b*400,a*1-b/2,a];A=a*2-1;B=b*2-1;if(A*A+B*B<1){if(c>37){n=(j=c&1)?6:4;o=.5/(a+.01)+C(b*125)*3-a*300;w=b*h;return[o*C(n)+w*S(n)+j*610-390,o*S(n)-w*C(n)+550-j*350,1180+C(B+A)*99-j*300,.4-a*.1+P(1-B*B,-h*6)*.15-a*b*.4+C(a+b)/5+P(C((o*(a+1)+(B>0?w:-w))/25),30)*.1*(1-B*B),o/1e3+.7-o*w*3e-6]}if(c>32){c=c*1.16-.15;o=a*45-20;w=b*b*h;z=o*S(c)+w*C(c)+620;return[o*C(c)-w*S(c),28+C(B*.5)*99-b*b*b*60-z/2-h,z,(b*b*.3+P((1-(A*A)),7)*.15+.3)*b,b*.7]}o=A*(2-b)*(80-c*2);w=99-C(A)*120-C(b)*(-h-c*4.9)+C(P(1-b,7))*50+c*2;z=o*S(c)+w*C(c)+700;return[o*C(c)-w*S(c),B*99-C(P(b, 7))*50-c/3-z/1.35+450,z,(1-b/1.2)*.9+a*.1, P((1-b),20)/4+.05]}}setInterval('for(i=0;i<1e4;i++)if(s=p(R(),R(),i%46/.74)){z=s[2];x=~~(s[0]*f/z-h);y=~~(s[1]*f/z-h);if(!m[q=y*f+x]|m[q]>z)m[q]=z,a.fillStyle="rgb("+~(s[3]*h)+","+~(s[4]*h)+","+~(s[3]*s[3]*-80)+")",a.fillRect(x,y,1,1)}',0)
+    function updateWorld() {
+      update();
+      paint();
+      window.requestAnimationFrame(updateWorld);
+    }
 
-</script>
+    function update() {
+      if (particles.length < 500 && Math.random() < probability) {
+        createFirework();
+      }
+      var alive = [];
+      for (var i = 0; i < particles.length; i++) {
+        if (particles[i].move()) {
+          alive.push(particles[i]);
+        }
+      }
+      particles = alive;
+    }
 
-</body></html>
+    function paint() {
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.fillStyle = "rgba(0,0,0,0.2)";
+      ctx.fillRect(0, 0, w, h);
+      ctx.globalCompositeOperation = 'lighter';
+      for (var i = 0; i < particles.length; i++) {
+        particles[i].draw(ctx);
+      }
+    }
+
+    function createFirework() {
+      xPoint = Math.random() * (w - 200) + 100;
+      yPoint = Math.random() * (h - 200) + 100;
+      var nFire = Math.random() * 50 + 100;
+      var c = "rgb(" + (~~(Math.random() * 200 + 55)) + "," +
+        (~~(Math.random() * 200 + 55)) + "," + (~~(Math.random() * 200 + 55)) + ")";
+      for (var i = 0; i < nFire; i++) {
+        var particle = new Particle();
+        particle.color = c;
+        var vy = Math.sqrt(25 - particle.vx * particle.vx);
+        if (Math.abs(particle.vy) > vy) {
+          particle.vy = particle.vy > 0 ? vy : -vy;
+        }
+        particles.push(particle);
+      }
+    }
+
+    function Particle() {
+      this.w = this.h = Math.random() * 4 + 1;
+
+      this.x = xPoint - this.w / 2;
+      this.y = yPoint - this.h / 2;
+
+      this.vx = (Math.random() - 0.5) * 10;
+      this.vy = (Math.random() - 0.5) * 10;
+
+      this.alpha = Math.random() * .5 + .5;
+
+      this.color;
+    }
+
+    Particle.prototype = {
+      gravity: 0.05,
+      move: function() {
+        this.x += this.vx;
+        this.vy += this.gravity;
+        this.y += this.vy;
+        this.alpha -= 0.01;
+        if (this.x <= -this.w || this.x >= screen.width ||
+          this.y >= screen.height ||
+          this.alpha <= 0) {
+          return false;
+        }
+        return true;
+      },
+      draw: function(c) {
+        c.save();
+        c.beginPath();
+
+        c.translate(this.x + this.w / 2, this.y + this.h / 2);
+        c.arc(0, 0, this.w, 0, Math.PI * 2);
+        c.fillStyle = this.color;
+        c.globalAlpha = this.alpha;
+
+        c.closePath();
+        c.fill();
+        c.restore();
+      }
+    }
+  </script>
+</body>
+
+</html>
